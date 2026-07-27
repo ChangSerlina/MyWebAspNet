@@ -1,0 +1,5 @@
+services:
+  myweb_aspnet:
+    build: .
+    ports:
+      - "5259:5259"

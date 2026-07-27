@@ -1,0 +1,10 @@
+services:
+  web:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    container_name: myweb_aspnet
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: dotnet watch run --urls=http://0.0.0.0:8080
