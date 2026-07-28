@@ -19,7 +19,7 @@ dotnet new mvc -au Individual -o MyWebAspNet
 
 ## 建立資料庫
 ```sh
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add CreateIdentitySchema
 dotnet ef database update
 # 如果要還原
 dotnet ef migrations remove
