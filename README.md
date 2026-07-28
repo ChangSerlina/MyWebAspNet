@@ -19,9 +19,15 @@ dotnet new mvc -au Individual -o MyWebAspNet
 
 ## 建立資料庫
 ```sh
-dotnet ef migrations add CreateIdentitySchema
-dotnet ef database update
+dotnet ef migrations add PayAccountCreate
 # 如果要還原
+dotnet ef migrations remove
+
+dotnet ef database update
+```
+```
+# 執行之後如果要還原到一開始的狀態
+dotnet ef database update CreateIdentitySchema
 dotnet ef migrations remove
 # 刪除資料庫
 dotnet ef database drop
