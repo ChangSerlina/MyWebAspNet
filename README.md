@@ -25,7 +25,7 @@ dotnet ef migrations remove
 
 dotnet ef database update
 ```
-```
+```sh
 # 執行之後如果要還原到一開始的狀態
 dotnet ef database update CreateIdentitySchema
 dotnet ef migrations remove
