@@ -50,4 +50,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 
     public DbSet<PayAccount> PayAccount { get; set; } = default!;
+    public DbSet<BillCategory> BillCategory { get; set; } = default!;
 }
