@@ -24,6 +24,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Currency>()
+            .HasIndex(c => c.Code)
+            .IsUnique();
+    }
+
     private void SetTimestamps()
     {
         var now = DateTime.UtcNow;  // 使用 UTC 時間，避免時區問題，要顯示本地時間可以在前端轉換
@@ -51,4 +60,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<PayAccount> PayAccount { get; set; } = default!;
     public DbSet<BillCategory> BillCategory { get; set; } = default!;
+    public DbSet<Currency> Currency { get; set; } = default!;
 }
