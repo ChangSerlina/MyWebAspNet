@@ -16,8 +16,17 @@ dotnet clean
 ```sh
 dotnet new mvc -au Individual -o MyWebAspNet
 ```
+## 寫好model之後，使用 Scaffolding 工具來為模型產生 Controller 和 Create、Read、Update、Delete (CRUD) 頁面
+eg. Models/PayAccount.cs
+
+```sh
+export PATH=$HOME/.dotnet/tools:$PATH
+dotnet aspnet-codegenerator controller -name PayAccountController -m PayAccount -dc MyWebAspNet.Data.ApplicationDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries --databaseProvider sqlite
+```
 
 ## 建立資料庫
+![ERD](ERD)
+
 ```sh
 dotnet ef migrations add PayAccountCreate
 # 如果要還原

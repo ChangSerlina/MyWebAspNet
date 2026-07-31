@@ -9,6 +9,9 @@ public class BillCategory : BaseEntity
     public string Name { get; set; } = string.Empty;
     [Required]
     public TransactionType TransactionType { get; set; } = TransactionType.Unknown;
+
+    // 雙向關聯
+    public ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }
 
 public enum TransactionType

@@ -1,13 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyWebAspNet.Models;
 
-public class PayAccount : BaseEntity
+public class ApplicationUser : IdentityUser
 {
-    public int Id { get; set; }
-    [Required]
-    public string Name { get; set; } = string.Empty;
-
     // 雙向關聯
     public ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }

@@ -22,4 +22,7 @@ public class Currency : BaseEntity
     public byte DecimalPlaces { get; set; } = 2;
 
     public bool IsActive { get; set; } = true;
+
+    // 雙向關聯
+    public ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }

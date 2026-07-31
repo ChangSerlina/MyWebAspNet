@@ -4,8 +4,8 @@ using MyWebAspNet.Models;
 
 namespace MyWebAspNet.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
-{
+// extend IdentityDbContext<ApplicationUser> to include ApplicationUser
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options){
     public override int SaveChanges()
     {
         SetTimestamps();
@@ -61,4 +61,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PayAccount> PayAccount { get; set; } = default!;
     public DbSet<BillCategory> BillCategory { get; set; } = default!;
     public DbSet<Currency> Currency { get; set; } = default!;
+    public DbSet<Bill> Bill { get; set; } = default!;
 }
