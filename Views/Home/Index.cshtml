@@ -1,8 +1,30 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using MyWebAspNet.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">個人記帳</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <p>歡迎回來，@User.Identity?.Name！</p>
+        <p>
+            <a asp-controller="Bill" asp-action="Create" class="btn btn-primary">新增記帳明細</a>
+            <a asp-controller="Bill" asp-action="Index" class="btn btn-secondary">查看我的明細</a>
+        </p>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>請先註冊或登入，才能新增與管理自己的記帳明細。</p>
+            <p>
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary">註冊</a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary">登入</a>
+            </p>
+        </div>
+    }
 </div>

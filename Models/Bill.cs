@@ -15,7 +15,7 @@ public class Bill : BaseEntity
     // Data
     [Required]
     public decimal Amount { get; set; } = 0;
-    public string Note { get; set; } = string.Empty;
+    public string? Note { get; set; }
     public DateTime TransactionDate { get; set; } = DateTime.Now;
 
     // Navigation

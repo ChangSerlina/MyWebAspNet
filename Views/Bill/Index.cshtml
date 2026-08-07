@@ -1,71 +1,233 @@
 @model IEnumerable<MyWebAspNet.Models.Bill>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "帳目日曆";
 }
 
-<h1>Index</h1>
+<h1>帳目日曆</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <button id="prevMonth" class="btn btn-outline-secondary">&lt;</button>
+    <h3 id="monthLabel" class="mb-0"></h3>
+    <button id="nextMonth" class="btn btn-outline-secondary">&gt;</button>
+</div>
+
+<div id="calendar" class="mb-3"></div>
+
+<h4>已選擇： <span id="selectedDateLabel">-</span></h4>
+
+<table class="table" id="billsTable">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PayAccount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BillCategory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Currency)
-            </th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.Amount)</th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.TransactionDate)</th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.PayAccount)</th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.BillCategory)</th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.Currency)</th>
+            <th>@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.Note)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TransactionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PayAccount.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillCategory.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Currency.Code)
-            </td>
+    @foreach (var item in Model) {
+        <tr data-date="@item.TransactionDate.ToString("yyyy-MM-dd")">
+            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td>@Html.DisplayFor(modelItem => item.TransactionDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.PayAccount.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.BillCategory.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.Currency.Code)</td>
+            <td>@Html.DisplayFor(modelItem => item.Note)</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
+
+<hr />
+
+<h4>新增明細</h4>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div class="text-danger">@Html.ValidationSummary(true)</div>
+            <div class="form-group">
+                <label for="PayAccountId">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.PayAccountId)</label>
+                @Html.DropDownList("PayAccountId", (SelectList)ViewBag.PayAccountId, "", new { @class = "form-control", id = "PayAccountId" })
+                @Html.ValidationMessage("PayAccountId", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="BillCategoryId">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.BillCategoryId)</label>
+                @Html.DropDownList("BillCategoryId", (SelectList)ViewBag.BillCategoryId, "", new { @class = "form-control", id = "BillCategoryId" })
+                @Html.ValidationMessage("BillCategoryId", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="CurrencyId">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.CurrencyId)</label>
+                @Html.DropDownList("CurrencyId", (SelectList)ViewBag.CurrencyId, "", new { @class = "form-control", id = "CurrencyId" })
+                @Html.ValidationMessage("CurrencyId", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="Amount">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.Amount)</label>
+                <input name="Amount" id="Amount" class="form-control" />
+                @Html.ValidationMessage("Amount", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="Note">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.Note)</label>
+                <input name="Note" id="Note" class="form-control" />
+                @Html.ValidationMessage("Note", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="TransactionDate">@Html.DisplayNameFor((MyWebAspNet.Models.Bill m) => m.TransactionDate)</label>
+                <input name="TransactionDate" id="TransactionDate" class="form-control" type="date" />
+                @Html.ValidationMessage("TransactionDate", "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <style>
+        .calendar { width:100%; max-width:600px; }
+        .calendar table { width:100%; }
+        .calendar .day { height:80px; vertical-align:top; padding:6px; border:1px solid #eee; }
+        .calendar .other-month { color:#bbb; }
+        .calendar .selected { background:#e6f0ff; }
+        .calendar .day .date-num { font-weight:600; }
+        .day-dot { width:8px; height:8px; display:inline-block; background:#007bff; border-radius:50%; margin-left:6px; }
+    </style>
+
+    <script>
+        (function(){
+            const billsTableRows = Array.from(document.querySelectorAll('#billsTable tbody tr'));
+
+            function formatYMD(d) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth()+1).padStart(2,'0');
+                const day = String(d.getDate()).padStart(2,'0');
+                return `${y}-${m}-${day}`;
+            }
+
+            let today = new Date();
+            let currentYear = today.getFullYear();
+            let currentMonth = today.getMonth();
+            let selectedDate = formatYMD(today);
+
+            const monthLabel = document.getElementById('monthLabel');
+            const calendarEl = document.getElementById('calendar');
+            const selectedDateLabel = document.getElementById('selectedDateLabel');
+            const transactionDateInput = document.getElementById('TransactionDate');
+
+            function gatherDatesWithBills() {
+                const set = new Set();
+                billsTableRows.forEach(r => {
+                    const d = r.getAttribute('data-date');
+                    if (d) set.add(d);
+                });
+                return set;
+            }
+
+            function renderCalendar(year, month) {
+                const first = new Date(year, month, 1);
+                const startDay = first.getDay();
+                const daysInMonth = new Date(year, month+1, 0).getDate();
+                const prevDays = new Date(year, month, 0).getDate();
+
+                const datesWithBills = gatherDatesWithBills();
+
+                monthLabel.textContent = first.toLocaleString(undefined, { year: 'numeric', month: 'long' });
+
+                let html = '<div class="calendar"><table class="table table-sm"><thead><tr>';
+                const weekNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                weekNames.forEach(w=> html += `<th>${w}</th>`);
+                html += '</tr></thead><tbody>';
+
+                let day = 1;
+                let nextDay = 1;
+                let started = false;
+                for (let week=0; week<6; week++) {
+                    html += '<tr>';
+                    for (let wd=0; wd<7; wd++) {
+                        let cellHtml = '';
+                        const cellIndex = week*7 + wd;
+                        let cellDate = null;
+
+                        if (cellIndex < startDay) {
+                            const dnum = prevDays - (startDay - cellIndex) + 1;
+                            const dt = new Date(year, month-1, dnum);
+                            cellDate = formatYMD(dt);
+                            cellHtml = `<div class="date-num">${dnum}</div>`;
+                            html += `<td class="day other-month" data-date="${cellDate}">${cellHtml}</td>`;
+                        } else if (day <= daysInMonth) {
+                            const dt = new Date(year, month, day);
+                            cellDate = formatYMD(dt);
+                            cellHtml = `<div class="date-num">${day}</div>`;
+                            if (datesWithBills.has(cellDate)) {
+                                cellHtml += '<span class="day-dot"></span>';
+                            }
+                            const selectedClass = (cellDate === selectedDate) ? 'selected' : '';
+                            html += `<td class="day ${selectedClass}" data-date="${cellDate}" style="cursor:pointer;">${cellHtml}</td>`;
+                            day++;
+                        } else {
+                            const dt = new Date(year, month+1, nextDay);
+                            cellDate = formatYMD(dt);
+                            cellHtml = `<div class="date-num">${nextDay}</div>`;
+                            html += `<td class="day other-month" data-date="${cellDate}">${cellHtml}</td>`;
+                            nextDay++;
+                        }
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody></table></div>';
+
+                calendarEl.innerHTML = html;
+
+                // attach click handlers
+                Array.from(calendarEl.querySelectorAll('.day')).forEach(td => {
+                    td.addEventListener('click', () => {
+                        const d = td.getAttribute('data-date');
+                        if (d) setSelectedDate(d);
+                    });
+                });
+            }
+
+            function setSelectedDate(dateStr) {
+                selectedDate = dateStr;
+                selectedDateLabel.textContent = dateStr;
+                if (transactionDateInput) transactionDateInput.value = dateStr;
+
+                // highlight selected cell
+                Array.from(calendarEl.querySelectorAll('.day')).forEach(td => {
+                    if (td.getAttribute('data-date') === dateStr) td.classList.add('selected'); else td.classList.remove('selected');
+                });
+
+                // filter table rows
+                billsTableRows.forEach(r => {
+                    if (r.getAttribute('data-date') === dateStr) r.style.display = ''; else r.style.display = 'none';
+                });
+            }
+
+            document.getElementById('prevMonth').addEventListener('click', ()=>{
+                currentMonth -= 1;
+                if (currentMonth < 0) { currentMonth = 11; currentYear -= 1; }
+                renderCalendar(currentYear, currentMonth);
+            });
+            document.getElementById('nextMonth').addEventListener('click', ()=>{
+                currentMonth += 1;
+                if (currentMonth > 11) { currentMonth = 0; currentYear += 1; }
+                renderCalendar(currentYear, currentMonth);
+            });
+
+            // initial render
+            renderCalendar(currentYear, currentMonth);
+            setSelectedDate(selectedDate);
+        })();
+    </script>
+}
